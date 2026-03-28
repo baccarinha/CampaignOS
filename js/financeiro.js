@@ -8,10 +8,13 @@ function renderFinanceiro() {
     const orc  = Number(c.orcamento  || 0);
     const lucro = rec - inv;
     const roi  = inv > 0 ? (((rec - inv) / inv) * 100).toFixed(1) : null;
-    const cpl  = Number(c.leads)      > 0 ? (inv / Number(c.leads)).toFixed(2)      : null;
-    const cpp  = Number(c.conversoes) > 0 ? (inv / Number(c.conversoes)).toFixed(2) : null;
+    const leads = Number(c.leads || 0);
+    const conversoes = Number(c.conversoes || 0);
+    const cpl  = leads > 0 ? (inv / leads).toFixed(2) : null; // R$ por lead
+    // CPConv agora é taxa de conversão em % (conversões / leads * 100)
+    const cpconv = (conversoes > 0 && leads > 0) ? ((conversoes / leads) * 100).toFixed(1) : null;
     const gap  = orc - inv;
-    return { ...c, inv, rec, orc, lucro, roi, cpl, cpp, gap };
+    return { ...c, inv, rec, orc, lucro, roi, cpl, cpconv, gap };
   });
 
   const totOrc   = rows.reduce((a, r) => a + r.orc, 0);
@@ -64,7 +67,7 @@ function renderFinanceiro() {
                 <td style="color:${r.lucro >= 0 ? "#10B981" : "#EF4444"};font-weight:700">${currency(r.lucro)}</td>
                 <td style="color:${r.roi === null ? "rgba(255,255,255,.2)" : Number(r.roi) >= 0 ? "#10B981" : "#EF4444"};font-weight:700">${r.roi !== null ? `${r.roi}%` : "—"}</td>
                 <td style="color:rgba(255,255,255,.5)">${r.cpl ? `R$ ${r.cpl}` : "—"}</td>
-                <td style="color:rgba(255,255,255,.5)">${r.cpp ? `R$ ${r.cpp}` : "—"}</td>
+                <td style="color:rgba(255,255,255,.5)">${r.cpconv !== null ? `${r.cpconv}%` : "—"}</td>
               </tr>`;
           }).join("")}
         </tbody>
