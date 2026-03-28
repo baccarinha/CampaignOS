@@ -9,9 +9,11 @@
         html { scroll-behavior: smooth; }
         .hidden { display: none; }
         .active-menu { background: rgba(20, 184, 166, 0.1); color: #0f766e; border-right: 4px solid #14b8a6; }
+        /* Estilo para simular o layout da imagem */
+        .chat-container { height: calc(100vh - 4rem); }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 flex h-screen overflow-hidden">
+<body class="bg-gray-50 text-gray-900 flex h-screen overflow-hidden font-sans">
 
     <aside class="w-64 bg-white border-r border-gray-100 flex flex-col shrink-0">
         <div class="p-6 flex items-center gap-3 border-b border-gray-100">
@@ -23,11 +25,14 @@
             <button onclick="showTab('laboratorio')" id="btn-laboratorio" class="sidebar-item w-full text-left flex items-center gap-3 p-3 rounded-lg text-gray-600 hover:bg-gray-50 transition">🧪 Laboratório Criativo</button>
             <button onclick="showTab('consultoria')" id="btn-consultoria" class="sidebar-item w-full text-left flex items-center gap-3 p-3 rounded-lg text-gray-600 hover:bg-gray-50 transition font-bold">🧠 Consultoria IA</button>
         </nav>
+        <div class="p-4 border-t border-gray-100 text-[10px] text-gray-400 text-center uppercase tracking-widest">
+            Cultura de Dados
+        </div>
     </aside>
 
-    <main class="flex-1 overflow-y-auto p-8">
+    <main class="flex-1 overflow-y-auto">
         
-        <div id="tab-dashboard">
+        <div id="tab-dashboard" class="p-8">
             <header class="mb-8">
                 <h2 class="text-2xl font-bold text-gray-800">Seu Desempenho</h2>
                 <p class="text-gray-500">Insira os dados para a IA analisar.</p>
@@ -54,42 +59,63 @@
             </div>
         </div>
 
-        <div id="tab-laboratorio" class="hidden">
-            <header class="mb-8">
+        <div id="tab-laboratorio" class="hidden p-8">
+            <header class="mb-8 text-center">
                 <h2 class="text-2xl font-bold text-gray-800">Laboratório Criativo</h2>
+                <p class="text-gray-500">Crie copies e anúncios de alta conversão.</p>
             </header>
-            <div class="max-w-2xl bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-                <textarea id="aiInput" rows="3" placeholder="Ex: Venda de biquínis focada em conforto..." class="w-full p-4 border rounded-2xl outline-none focus:border-teal-500 bg-gray-50 mb-4"></textarea>
+            <div class="max-w-2xl mx-auto bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                <textarea id="aiInput" rows="3" placeholder="O que vamos vender hoje?" class="w-full p-4 border rounded-2xl outline-none focus:border-teal-500 bg-gray-50 mb-4"></textarea>
                 <button onclick="generateAd()" class="w-full bg-teal-500 text-white font-bold py-4 rounded-xl hover:bg-teal-600 transition">GERAR ANÚNCIO ✨</button>
                 <div id="adResult" class="hidden mt-6 p-6 bg-teal-50 rounded-2xl border border-teal-100 text-sm text-teal-800">
-                    <b>Sugestão:</b> <p id="resultLegenda" class="mt-2"></p>
+                    <p id="resultLegenda"></p>
                 </div>
             </div>
         </div>
 
-        <div id="tab-consultoria" class="hidden">
-            <header class="mb-8">
-                <h2 class="text-2xl font-bold text-gray-800">🧠 Consultoria de Estratégia</h2>
-                <p class="text-gray-500 italic">Análise baseada no seu histórico real de vendas.</p>
-            </header>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <section class="space-y-4">
-                    <h3 class="text-lg font-bold text-gray-700 flex items-center gap-2">🚀 O Que Fazer Amanhã?</h3>
-                    <div id="todoList" class="bg-white p-6 rounded-3xl border border-teal-100 shadow-sm space-y-4">
-                        <p class="text-gray-400 text-sm italic">Insira dados no Dashboard para receber suas tarefas...</p>
+        <div id="tab-consultoria" class="hidden h-full flex flex-col md:flex-row overflow-hidden">
+            <div class="w-full md:w-1/2 p-8 flex flex-col justify-center bg-white border-r border-gray-100">
+                <div class="max-w-md mx-auto w-full">
+                    <div class="bg-teal-600 text-white text-center py-3 rounded-t-2xl font-bold uppercase tracking-widest text-xs">
+                        Consultoria IA
                     </div>
-                </section>
-
-                <section class="space-y-4">
-                    <h3 class="text-lg font-bold text-gray-700 flex items-center gap-2">📖 Histórico de Aprendizado</h3>
-                    <div id="learningHistory" class="space-y-3">
-                        <div class="bg-white p-4 rounded-xl border-l-4 border-gray-300 shadow-sm opacity-50">
-                            <p class="text-sm font-bold text-gray-400">Padrão de Compra</p>
-                            <p class="text-xs text-gray-400">A IA ainda não identificou padrões.</p>
+                    <div class="bg-gray-50 p-8 rounded-b-2xl border border-gray-100 shadow-inner">
+                        <div class="flex items-center gap-3 mb-6">
+                            <span class="text-3xl">🤖</span>
+                            <div class="flex-1 border-b border-gray-300 pb-2">
+                                <label class="text-[10px] font-bold text-gray-400 uppercase block">Sua Pergunta</label>
+                                <input id="userQuestion" type="text" placeholder="Como melhorar minha conversão?" class="w-full bg-transparent outline-none text-gray-700 font-medium">
+                            </div>
                         </div>
+                        <button onclick="askIA()" class="w-full bg-teal-500 text-white font-black py-4 rounded-xl hover:bg-teal-600 shadow-lg transition-all flex items-center justify-center gap-2">
+                            ENVIAR PERGUNTA <span class="text-lg">💬</span>
+                        </button>
                     </div>
-                </section>
+                </div>
+            </div>
+
+            <div class="w-full md:w-1/2 p-8 overflow-y-auto bg-slate-50 space-y-6">
+                <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-200 pb-2">Resposta da IA</h3>
+                
+                <div id="waitingResponse" class="flex flex-col items-center justify-center h-full text-gray-300 py-20">
+                    <span class="text-5xl mb-4">🧠</span>
+                    <p class="text-sm italic">Faça uma pergunta estratégica ao lado.</p>
+                </div>
+
+                <div id="consultoriaContent" class="hidden space-y-4">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h4 class="font-bold text-gray-800 text-sm mb-3">Análise da Taxa</h4>
+                        <p id="analiseTexto" class="text-xs text-gray-600 leading-relaxed"></p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h4 class="font-bold text-gray-800 text-sm mb-3">Pontos de Melhoria</h4>
+                        <ul id="melhoriaLista" class="text-xs text-gray-600 space-y-2"></ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h4 class="font-bold text-gray-800 text-sm mb-3">Próximos Passos</h4>
+                        <ul id="passosLista" class="text-xs text-gray-600 space-y-2"></ul>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -104,78 +130,78 @@
             document.getElementById('btn-' + tabName).classList.add('active-menu');
         }
 
-        // DADOS E LOGICA
-        let campaigns = [];
+        // DADOS GLOBAIS
+        let currentROI = 0;
+        let lastCampaignName = "";
 
+        // DASHBOARD LOGIC
         document.getElementById('campaignForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const name = document.getElementById('campName').value;
             const spend = parseFloat(document.getElementById('campSpend').value);
             const revenue = parseFloat(document.getElementById('campRevenue').value);
             
-            campaigns.push({ name, spend, revenue });
+            lastCampaignName = name;
+            currentROI = spend > 0 ? revenue / spend : 0;
 
-            // Cálculos
-            const totalS = campaigns.reduce((s, c) => s + c.spend, 0);
-            const totalR = campaigns.reduce((s, c) => s + c.revenue, 0);
-            const roi = totalS > 0 ? totalR / totalS : 0;
-
-            // Atualizar Dashboard
-            document.getElementById('totalROI').innerText = `${roi.toFixed(1)}x`;
+            document.getElementById('totalROI').innerText = `${currentROI.toFixed(1)}x`;
             const insight = document.getElementById('aiInsightText');
             
-            // Lógica de Consultoria IA (O que faz funcionar)
-            const todoList = document.getElementById('todoList');
-            const learningHistory = document.getElementById('learningHistory');
-
-            if (roi >= 2) {
-                insight.innerText = "Parabéns! Operação lucrativa. Vá para a aba Consultoria para ver como escalar.";
-                
-                // Atualiza as tarefas da consultoria
-                todoList.innerHTML = `
-                    <div class="flex items-start gap-3 p-2 bg-green-50 rounded-lg">
-                        <input type="checkbox" class="mt-1">
-                        <p class="text-sm"><b>Aumentar Orçamento:</b> Suba o gasto da campanha "${name}" em 20% amanhã cedo.</p>
-                    </div>
-                    <div class="flex items-start gap-3 p-2">
-                        <input type="checkbox" class="mt-1">
-                        <p class="text-sm">Criar um público 'Lookalike' baseado nos compradores de hoje.</p>
-                    </div>`;
-                
-                learningHistory.innerHTML = `
-                    <div class="bg-white p-4 rounded-xl border-l-4 border-green-500 shadow-sm">
-                        <p class="text-sm font-bold">Padrão Vencedor</p>
-                        <p class="text-xs text-gray-500">A campanha "${name}" performa melhor com o público feminino. Focar nisso.</p>
-                    </div>`;
-
+            if (currentROI >= 2) {
+                insight.innerText = "Operação lucrativa! Vá para a Consultoria IA para entender como escalar o orçamento sem perder eficiência.";
             } else {
-                insight.innerText = "ROI abaixo do esperado. Você está perdendo dinheiro. Veja as ações corretivas na Consultoria.";
-                
-                todoList.innerHTML = `
-                    <div class="flex items-start gap-3 p-2 bg-red-50 rounded-lg">
-                        <input type="checkbox" class="mt-1">
-                        <p class="text-sm text-red-700"><b>PAUSAR IMEDIATO:</b> Reduza o gasto da campanha "${name}" até trocar o criativo.</p>
-                    </div>
-                    <div class="flex items-start gap-3 p-2">
-                        <input type="checkbox" class="mt-1">
-                        <p class="text-sm">Revisar oferta do site: o preço pode estar acima do mercado.</p>
-                    </div>`;
-
-                learningHistory.innerHTML = `
-                    <div class="bg-white p-4 rounded-xl border-l-4 border-red-500 shadow-sm">
-                        <p class="text-sm font-bold">Risco Identificado</p>
-                        <p class="text-xs text-gray-500">O custo de aquisição da campanha "${name}" subiu 40% nas últimas horas.</p>
-                    </div>`;
+                insight.innerText = "Atenção: ROI abaixo do ideal. A Consultoria IA já preparou um plano de contingência para você.";
             }
 
             this.reset();
         });
 
+        // CONSULTORIA IA (LÓGICA CHAT DA IMAGEM)
+        function askIA() {
+            const question = document.getElementById('userQuestion').value;
+            if (!question) return alert("Digite sua dúvida estratégica!");
+
+            // Interface
+            document.getElementById('waitingResponse').classList.add('hidden');
+            const content = document.getElementById('consultoriaContent');
+            content.classList.remove('hidden');
+
+            // Elementos
+            const analise = document.getElementById('analiseTexto');
+            const melhoria = document.getElementById('melhoriaLista');
+            const passos = document.getElementById('passosLista');
+
+            // Resposta Dinâmica baseada no ROI do Dashboard
+            if (currentROI === 0) {
+                analise.innerText = "Ainda não tenho dados suficientes no seu Dashboard. Por favor, cadastre uma campanha para uma análise real.";
+                melhoria.innerHTML = "<li>• Aguardando histórico...</li>";
+                passos.innerHTML = "<li>• Cadastre seus números na aba Dashboard.</li>";
+            } else if (currentROI < 1.5) {
+                analise.innerText = `Identifiquei que sua campanha "${lastCampaignName}" está operando com ROI de ${currentROI.toFixed(1)}x, o que é crítico para sua margem.`;
+                melhoria.innerHTML = `
+                    <li>• O criativo está com frequência alta. Troque a foto principal.</li>
+                    <li>• A oferta no carrinho pode ser otimizada. Adicione frete grátis.</li>`;
+                passos.innerHTML = `
+                    <li>• Pause os anúncios que não converteram nas últimas 48h.</li>
+                    <li>• Mude o CTA para "Saiba Mais" em vez de "Comprar Agora".</li>`;
+            } else {
+                analise.innerText = `Excelente! Sua campanha "${lastCampaignName}" está saudável. Notei que seu público de 25-45 anos está com 15% mais engajamento.`;
+                melhoria.innerHTML = `
+                    <li>• Escala horizontal: Você pode duplicar essa campanha para um novo interesse.</li>
+                    <li>• O checkout está rápido, mas podemos adicionar um 'Upsell'.</li>`;
+                passos.innerHTML = `
+                    <li>• Aumente o orçamento diário em 15% a cada 3 dias.</li>
+                    <li>• Crie um criativo de depoimento (prova social) para este público.</li>`;
+            }
+        }
+
+        // LABORATÓRIO LOGIC
         function generateAd() {
             const input = document.getElementById('aiInput').value;
             if(!input) return;
-            document.getElementById('adResult').classList.remove('hidden');
-            document.getElementById('resultLegenda').innerText = "Venda mais com essa copy: 'Descubra o segredo de quem valoriza cada momento. Conforto e elegância que você merece. Aproveite agora!'";
+            const res = document.getElementById('adResult');
+            res.classList.remove('hidden');
+            document.getElementById('resultLegenda').innerHTML = `<b>Legenda Sugerida:</b><br>Descubra o conforto que abraça sua autoestima. Nossa nova coleção foi feita para quem não abre mão do poder. ✨ Clique no link da bio e confira!`;
         }
     </script>
 </body>
